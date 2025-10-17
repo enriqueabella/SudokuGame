@@ -1,52 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.project.sudokugame.SudokuController"
-            prefHeight="400.0" prefWidth="600.0"
-            stylesheets="@sudoku.css"><top>
-      <VBox BorderPane.alignment="CENTER">
-         <children>
-            <StackPane>
-               <children>
-                  <Label contentDisplay="CENTER" prefHeight="24.0" prefWidth="130.0" text="Sudoku">
-                     <font>
-                        <Font name="Ravie" size="17.0" />
-                     </font>
-                  </Label>
-               </children>
-            </StackPane>
-            <ToolBar prefHeight="40.0" prefWidth="200.0">
-              <items>
-                <Button fx:id="btnNuevo" mnemonicParsing="false" text="Nuevo" />
-                  <Button fx:id="btnAyuda" mnemonicParsing="false" text="ayuda" />
-                  <VBox nodeOrientation="RIGHT_TO_LEFT" prefHeight="34.0" prefWidth="409.0">
-                     <children>
-                        <Label fx:id="lblPosicion" prefHeight="17.0" prefWidth="223.0" text="Ubicacion: " />
-                        <Label fx:id="lblMensajes" prefHeight="17.0" prefWidth="500.0" text="mensaje para el jugador!" />
-                     </children>
-                  </VBox>
-              </items>
-            </ToolBar>
-         </children>
-      </VBox>
-   </top>
-   <center>
-      <StackPane maxHeight="300.0" maxWidth="370.0" prefHeight="268.0" prefWidth="370.0" BorderPane.alignment="CENTER">
-         <children>
-            <GridPane fx:id="gridSudoku" hgap="0.0" style="-fx-grid-lines-visible: true;" vgap="0.0" StackPane.alignment="CENTER">
+            prefHeight="600.0" prefWidth="800.0"
+            stylesheets="@sudoku-theme.css">
 
-            </GridPane>
-         </children>
-      </StackPane>
-   </center>
+    <top>
+        <VBox BorderPane.alignment="CENTER" spacing="10.0" styleClass="app-header">
+            <children>
+                <StackPane>
+                    <children>
+                        <Label text="SUDOKU 6×6" style="-fx-font-size:36px; -fx-font-weight:800;" styleClass="app-title"/>
+                    </children>
+                </StackPane>
+
+                <ToolBar prefHeight="48.0" styleClass="toolbar">
+                    <items>
+                        <Button fx:id="btnNuevo" mnemonicParsing="false" text="Nuevo" styleClass="btn-primary" />
+                        <Button fx:id="btnAyuda" mnemonicParsing="false" text="Ayuda" styleClass="btn-ghost" />
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Label fx:id="lblPosicion" text="Ubicación: " styleClass="lbl-muted" />
+                        <Label fx:id="lblMensajes" text="mensaje para el jugador!" styleClass="lbl-status" />
+                    </items>
+                </ToolBar>
+            </children>
+            <padding>
+                <Insets top="12" bottom="0" left="16" right="16"/>
+            </padding>
+        </VBox>
+    </top>
+
+    <center>
+        <HBox alignment="CENTER" spacing="20" BorderPane.alignment="CENTER">
+            <children>
+
+                <!-- Imagen izquierda: referencia RELATIVA al FXML (archivo en el mismo paquete) -->
+                <ImageView fx:id="leftImage" fitHeight="250" fitWidth="180" preserveRatio="true" pickOnBounds="true" styleClass="side-image">
+                    <image>
+                        <Image url="@left.png"/>
+                    </image>
+                </ImageView>
+
+                <!-- Tablero (sin tocar) -->
+                <VBox alignment="CENTER" styleClass="board-container">
+                    <children>
+                        <GridPane fx:id="gridSudoku" hgap="6.0" vgap="6.0" styleClass="board-grid"/>
+                    </children>
+                    <padding>
+                        <Insets top="18" bottom="18" left="18" right="18" />
+                    </padding>
+                </VBox>
+
+                <!-- Imagen derecha: referencia RELATIVA -->
+                <ImageView fx:id="rightImage" fitHeight="250" fitWidth="180" preserveRatio="true" pickOnBounds="true" styleClass="side-image">
+                    <image>
+                        <Image url="@right.png"/>
+                    </image>
+                </ImageView>
+
+            </children>
+        </HBox>
+    </center>
+
 </BorderPane>
