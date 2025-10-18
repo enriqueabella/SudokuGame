@@ -18,6 +18,10 @@ public class SudokuController {
     private final SudokuModel model = new SudokuModel();
     private final TextField[][] cells = new TextField[SudokuModel.SIZE][SudokuModel.SIZE];
 
+    /**
+     * Initializes the controller after FXML loading.
+     * Sets up the grid, binds buttons, and refreshes the view.
+     */
     @FXML
     public void initialize() {
         buildGrid();
@@ -25,6 +29,9 @@ public class SudokuController {
         refreshView();
     }
 
+    /**
+     * Builds the 6x6 Sudoku grid of TextFields and attaches event handlers.
+     */
     private void buildGrid() {
         gridSudoku.getChildren().clear();
         for (int r = 0; r < SudokuModel.SIZE; r++) {
@@ -65,6 +72,9 @@ public class SudokuController {
         }
     }
 
+    /**
+     * Binds actions to the "Nuevo" and "Ayuda" buttons.
+     */
     private void bindButtons() {
         btnNuevo.setOnAction(e -> {
             Alert a = new Alert(Alert.AlertType.CONFIRMATION, "¿Iniciar nuevo juego?", ButtonType.YES, ButtonType.NO);
@@ -93,6 +103,9 @@ public class SudokuController {
         });
     }
 
+    /**
+     * Refreshes the Sudoku grid view according to the model state.
+     */
     private void refreshView() {
         for (int r = 0; r < SudokuModel.SIZE; r++) {
             for (int c = 0; c < SudokuModel.SIZE; c++) {
@@ -113,8 +126,10 @@ public class SudokuController {
         validateAll();
     }
 
+    /**
+     * Validates the entire grid, highlighting errors and checking for win condition.
+     */
     private void validateAll() {
-        // quitar errores anteriores
         for (int r=0;r<SudokuModel.SIZE;r++)
             for (int c=0;c<SudokuModel.SIZE;c++)
                 cells[r][c].getStyleClass().removeAll("error");
@@ -126,17 +141,14 @@ public class SudokuController {
                 int val = valueAt(r, c);
                 if (val == 0) continue;
 
-                // Fila
                 for (int cc=0; cc<SudokuModel.SIZE; cc++)
                     if (cc != c && valueAt(r, cc) == val)
                         markError(r, c);
 
-                // Columna
                 for (int rr=0; rr<SudokuModel.SIZE; rr++)
                     if (rr != r && valueAt(rr, c) == val)
                         markError(r, c);
 
-                // Bloque
                 int br = (r / SudokuModel.BLOCK_ROWS) * SudokuModel.BLOCK_ROWS;
                 int bc = (c / SudokuModel.BLOCK_COLS) * SudokuModel.BLOCK_COLS;
                 for (int i = 0; i < SudokuModel.BLOCK_ROWS; i++)
@@ -157,19 +169,21 @@ public class SudokuController {
             lblMensajes.setText("⚠️   ERROR/ES(resaltado/s en rojo).");
         } else {
             lblMensajes.setText("✅ Sin conflictos.");
-            checkWin(); // 👈 Verifica si se completó correctamente
+            checkWin();
         }
     }
 
+    /**
+     * Checks if the player has completed the Sudoku correctly.
+     * Shows a victory alert if completed.
+     */
     private void checkWin() {
-        // Si todas las celdas están llenas y sin error, el jugador gana
         for (int r = 0; r < SudokuModel.SIZE; r++) {
             for (int c = 0; c < SudokuModel.SIZE; c++) {
-                if (valueAt(r, c) == 0) return; // hay vacío, aún no gana
+                if (valueAt(r, c) == 0) return;
             }
         }
 
-        // Mostrar alerta de victoria
         Alert winAlert = new Alert(Alert.AlertType.INFORMATION);
         winAlert.setHeaderText("🎉 ¡Felicidades!");
         winAlert.setContentText("Completaste el Sudoku correctamente.");
@@ -178,6 +192,13 @@ public class SudokuController {
         lblMensajes.setText("🎉 ¡Ganaste el juego!");
     }
 
+    /**
+     * Returns the integer value of a cell, or 0 if empty or invalid.
+     *
+     * @param r Row index.
+     * @param c Column index.
+     * @return Value of the cell.
+     */
     private int valueAt(int r, int c) {
         String t = cells[r][c].getText().trim();
         if (t.isEmpty()) return 0;
@@ -185,8 +206,15 @@ public class SudokuController {
         catch (Exception ex) { return 0; }
     }
 
+    /**
+     * Marks a specific cell as having an error (highlight in red).
+     *
+     * @param r Row index.
+     * @param c Column index.
+     */
     private void markError(int r, int c) {
         TextField tf = cells[r][c];
         if (!tf.getStyleClass().contains("error")) tf.getStyleClass().add("error");
     }
 }
+

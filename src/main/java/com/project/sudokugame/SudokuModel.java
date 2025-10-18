@@ -6,98 +6,95 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Modelo principal del juego Sudoku.
+ * Main model for the Sudoku game.
  * <p>
- * Esta clase gestiona la generación del tablero completo (solución),
- * la creación del puzzle con pistas aleatorias y las funciones de validación
- * y ayuda del juego.
+ * This class handles generating the full solution board,
+ * creating the puzzle with random clues, and provides
+ * validation and hint functionality.
  * </p>
  */
 public class SudokuModel {
-    /** Tamaño del tablero (6x6). */
+    /** Size of the board (6x6). */
     public static final int SIZE = 6;
 
-    /** Número de filas por bloque (2). */
+    /** Number of rows per block (2). */
     public static final int BLOCK_ROWS = 2;
 
-    /** Número de columnas por bloque (3). */
+    /** Number of columns per block (3). */
     public static final int BLOCK_COLS = 3;
 
-    /** Tablero con la solución completa del Sudoku. */
+    /** Board containing the full Sudoku solution. */
     private final int[][] solution = new int[SIZE][SIZE];
 
-    /** Tablero visible del jugador (0 representa una celda vacía). */
+    /** Player-visible board (0 represents an empty cell). */
     private final int[][] puzzle = new int[SIZE][SIZE];
 
-    /** Matriz que indica qué celdas son pistas dadas (true = no se pueden modificar). */
+    /** Matrix indicating which cells are given clues (true = cannot be modified). */
     private final boolean[][] given = new boolean[SIZE][SIZE];
 
-    /** Generador de números aleatorios. */
+    /** Random number generator. */
     private final Random rnd = new Random();
 
     /**
-     * Constructor: crea un nuevo modelo y genera un puzzle inicial.
+     * Constructor: creates a new model and generates an initial puzzle.
      */
     public SudokuModel() {
         generateNewPuzzle();
     }
 
     /**
-     * Obtiene el valor de la celda en la solución completa.
+     * Gets the value of a cell in the full solution.
      *
-     * @param r Fila de la celda.
-     * @param c Columna de la celda.
-     * @return Valor de la celda en la solución.
+     * @param r Row of the cell.
+     * @param c Column of the cell.
+     * @return Value of the cell in the solution.
      */
     public int getSolution(int r, int c) { return solution[r][c]; }
 
     /**
-     * Obtiene el valor actual de una celda en el puzzle visible.
+     * Gets the current value of a cell in the visible puzzle.
      *
-     * @param r Fila de la celda.
-     * @param c Columna de la celda.
-     * @return Valor actual de la celda (0 si está vacía).
+     * @param r Row of the cell.
+     * @param c Column of the cell.
+     * @return Current value of the cell (0 if empty).
      */
     public int getCell(int r, int c) { return puzzle[r][c]; }
 
     /**
-     * Verifica si una celda fue dada como pista inicial.
+     * Checks if a cell was given as an initial clue.
      *
-     * @param r Fila de la celda.
-     * @param c Columna de la celda.
-     * @return true si la celda es una pista inicial, false si es editable.
+     * @param r Row of the cell.
+     * @param c Column of the cell.
+     * @return true if the cell is an initial clue, false if editable.
      */
     public boolean isGiven(int r, int c) { return given[r][c]; }
 
     /**
-     * Establece un nuevo valor en una celda del puzzle visible.
+     * Sets a new value in a cell of the visible puzzle.
      *
-     * @param r Fila de la celda.
-     * @param c Columna de la celda.
-     * @param v Valor a asignar (1–6, o 0 si se borra).
+     * @param r Row of the cell.
+     * @param c Column of the cell.
+     * @param v Value to assign (1–6, or 0 to clear).
      */
     public void setCell(int r, int c, int v) { puzzle[r][c] = v; }
 
     /**
-     * Genera una solución completa del Sudoku de manera aleatoria usando recursividad (backtracking).
+     * Generates a full Sudoku solution recursively (backtracking).
      *
-     * @param r Fila actual del tablero.
-     * @param c Columna actual del tablero.
-     * @return true si la solución se completó correctamente, false en caso contrario.
+     * @param r Current row on the board.
+     * @param c Current column on the board.
+     * @return true if the solution was successfully completed, false otherwise.
      */
     private boolean fillSolution(int r, int c) {
         if (r == SIZE) return true;
 
-        // Calcula la siguiente posición a llenar
         int nr = (c == SIZE - 1) ? r + 1 : r;
         int nc = (c == SIZE - 1) ? 0 : c + 1;
 
-        // Crea una lista aleatoria de números del 1 al 6
         List<Integer> nums = new ArrayList<>();
         for (int i = 1; i <= SIZE; i++) nums.add(i);
         Collections.shuffle(nums, rnd);
 
-        // Intenta colocar cada número y continúa recursivamente
         for (int n : nums) {
             if (isSafe(solution, r, c, n)) {
                 solution[r][c] = n;
@@ -109,25 +106,21 @@ public class SudokuModel {
     }
 
     /**
-     * Verifica si un valor puede colocarse en una posición del tablero sin violar
-     * las reglas del Sudoku.
+     * Checks if a value can be placed in a board position without violating Sudoku rules.
      *
-     * @param board Tablero en el que se realiza la verificación.
-     * @param r Fila donde se desea colocar el valor.
-     * @param c Columna donde se desea colocar el valor.
-     * @param val Valor a verificar.
-     * @return true si el valor puede colocarse, false en caso contrario.
+     * @param board Board to check.
+     * @param r Row to place the value.
+     * @param c Column to place the value.
+     * @param val Value to check.
+     * @return true if the value can be placed, false otherwise.
      */
     private boolean isSafe(int[][] board, int r, int c, int val) {
-        // Verifica fila y columna
         for (int i = 0; i < SIZE; i++)
             if (board[r][i] == val || board[i][c] == val) return false;
 
-        // Calcula el bloque 2x3 correspondiente
         int br = (r / BLOCK_ROWS) * BLOCK_ROWS;
         int bc = (c / BLOCK_COLS) * BLOCK_COLS;
 
-        // Verifica el bloque
         for (int i = 0; i < BLOCK_ROWS; i++)
             for (int j = 0; j < BLOCK_COLS; j++)
                 if (board[br + i][bc + j] == val) return false;
@@ -136,27 +129,22 @@ public class SudokuModel {
     }
 
     /**
-     * Genera un nuevo puzzle copiando la solución y dejando algunas pistas
-     * aleatorias en el tablero.
+     * Generates a new puzzle by copying the solution and leaving a number
+     * of random clues on the board.
      */
     public void generateNewPuzzle() {
-        // Limpia el tablero de solución
         for (int i = 0; i < SIZE; i++)
             for (int j = 0; j < SIZE; j++)
                 solution[i][j] = 0;
 
-        // Genera la solución completa
         fillSolution(0, 0);
 
-        // Copia la solución al puzzle
         for (int i = 0; i < SIZE; i++)
             for (int j = 0; j < SIZE; j++)
                 puzzle[i][j] = solution[i][j];
 
-        // Define cuántas pistas mantener (entre 10 y 18)
         int keep = 10 + rnd.nextInt(9);
 
-        // Vacía el puzzle y selecciona posiciones aleatorias
         for (int i = 0; i < SIZE; i++)
             for (int j = 0; j < SIZE; j++)
                 puzzle[i][j] = 0;
@@ -171,20 +159,19 @@ public class SudokuModel {
             puzzle[r][c] = solution[r][c];
         }
 
-        // Marca las celdas dadas como pistas
         for (int i = 0; i < SIZE; i++)
             for (int j = 0; j < SIZE; j++)
                 given[i][j] = puzzle[i][j] != 0;
     }
 
     /**
-     * Proporciona una pista al jugador.
+     * Provides a hint to the player.
      * <p>
-     * Busca una celda vacía y revela su valor correcto de la solución.
+     * Finds an empty cell and reveals its correct solution value.
      * </p>
      *
-     * @return Un arreglo con la posición y el valor de la pista [fila, columna, valor],
-     * o null si no hay celdas vacías.
+     * @return An array with the position and value of the hint [row, column, value],
+     * or null if no empty cells exist.
      */
     public int[] giveHint() {
         List<int[]> empties = new ArrayList<>();
