@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"com.project.sudokugame","l":"com.project.sudokugame"}];updateSearchResults();
