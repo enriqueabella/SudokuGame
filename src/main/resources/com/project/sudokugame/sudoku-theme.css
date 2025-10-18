@@ -105,3 +105,9 @@
     -fx-scale-x: 1.03;
     -fx-scale-y: 1.03;
 }
+
+.text-field.error {
+    -fx-border-color: #d33 !important;
+    -fx-border-width: 2 !important;
+    -fx-background-color: #ffecec !important;
+}
