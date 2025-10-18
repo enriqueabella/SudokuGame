@@ -154,7 +154,7 @@ public class SudokuController {
                     anyError = true;
 
         if (anyError) {
-            lblMensajes.setText("⚠️   detectados (resaltados en rojo).");
+            lblMensajes.setText("⚠️   ERROR/ES(resaltado/s en rojo).");
         } else {
             lblMensajes.setText("✅ Sin conflictos.");
             checkWin(); // 👈 Verifica si se completó correctamente

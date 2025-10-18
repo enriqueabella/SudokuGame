@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"com.project.sudokugame","l":"SudokuApp"},{"p":"com.project.sudokugame","l":"SudokuController"},{"p":"com.project.sudokugame","l":"SudokuModel"}];updateSearchResults();
